@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B. Varshith | Data Science Portfolio</title>
+    <style>
+        /* --- RESET & VARIABLES --- */
+        :root {
+            --bg-color: #050505;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --accent-primary: #00f2ff; /* Cyan Neon */
+            --accent-secondary: #7000ff; /* Purple Neon */
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --font-main: 'Inter', sans-serif;
+            --nav-height: 80px; /* Defined height for calculation */
+        }
+
+        /* FIX: Added Smooth Scroll and Padding to prevent Header Overlap */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: var(--nav-height); 
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* Custom cursor */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-primary);
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--accent-primary);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        body:hover .cursor-outline {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(0, 242, 255, 0.1);
+        }
+
+        /* --- ANIMATED BACKGROUND --- */
+        .bg-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #1a1a2e, #000000);
+            overflow: hidden;
+        }
+
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 10s infinite alternate;
+        }
+
+        .blob-1 { top: 10%; left: 20%; width: 300px; height: 300px; background: var(--accent-primary); animation-duration: 12s; }
+        .blob-2 { bottom: 20%; right: 10%; width: 400px; height: 400px; background: var(--accent-secondary); animation-duration: 15s; }
+        .blob-3 { top: 40%; left: 60%; width: 250px; height: 250px; background: #ff0055; animation-duration: 9s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 50px) scale(1.1); }
+        }
+
+        /* --- LAYOUT UTILITIES --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh; /* Ensures enough space */
+        }
+
+        /* --- SCROLL ANIMATION --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: var(--nav-height); /* Explicit height */
+            padding: 0 5%;
+            background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(to right, var(--text-main), var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none; /* Ensure logo isn't clickable underline */
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-primary);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            text-align: center;
+            height: 100vh;
+            padding-top: var(--nav-height);
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 10px;
+        }
+
+        .hero h1 span {
+            display: block;
+            background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .typewriter {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            min-height: 1.6em;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: transparent;
+            border: 1px solid var(--accent-primary);
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: var(--accent-primary);
+            z-index: -1;
+            transition: width 0.3s ease;
+        }
+
+        .btn:hover::before {
+            width: 100%;
+        }
+
+        .btn:hover {
+            color: #000;
+            box-shadow: 0 0 20px var(--accent-primary);
+        }
+
+        /* --- ABOUT SECTION --- */
+        .about-content {
+            max-width: 800px;
+            text-align: center;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(5px);
+        }
+        
+        .about-content h2 {
+            color: var(--accent-primary);
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .about-content p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        /* --- SKILLS SECTION --- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+            width: 100%;
+        }
+
+        .skill-item {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .skill-item:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-primary);
+            background: rgba(255,255,255,0.08);
+        }
+        
+        .skill-item i {
+            margin-bottom: 10px;
+            font-size: 2rem;
+            color: var(--accent-primary);
+        }
+
+        /* --- PROJECTS SECTION --- */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            width: 100%;
+        }
+
+        /* Center items if less than full row */
+        @media (min-width: 1000px) {
+            .project-grid {
+                justify-content: center; 
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transition: transform 0.1s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-content {
+            transform: translateZ(20px);
+            flex: 1;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--accent-primary);
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .card-details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 10px;
+        }
+
+        .tech-stack {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tech-tag {
+            font-size: 0.75rem;
+            padding: 5px 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            color: var(--text-main);
+        }
+
+        /* --- CONTACT SECTION --- */
+        .contact-box {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .contact-box h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .contact-link {
+            display: inline-block;
+            margin: 10px 15px;
+            color: var(--text-main);
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-link:hover {
+            color: var(--accent-primary);
+        }
+        
+        .contact-link i {
+            color: var(--accent-primary);
+            margin-right: 8px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .social-link {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--accent-primary);
+            color: #000;
+            transform: scale(1.1);
+            border-color: var(--accent-primary);
+        }
+
+        /* --- RESPONSIVE FIXES --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; }
+            .cursor-dot, .cursor-outline { display: none; }
+            * { cursor: auto; }
+            
+            /* FIX: Stack Nav links on mobile instead of hiding them */
+            .nav-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 100%;
+            }
+
+            .nav-links a {
+                margin: 0 10px; /* Reduce margin for mobile */
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Background -->
+    <div class="bg-mesh">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container nav-content">
+            <a href="#home" class="logo">B. VARSHITH</a>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#projects">Work</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container reveal">
+            <p style="color: var(--accent-primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;">Hello, I am</p>
+            <h1>
+                B. VARSHITH <br>
+                <span>Data Science Aspirant</span>
+            </h1>
+            <div class="typewriter" id="typewriter"></div>
+            <br>
+            <a href="#projects" class="btn">View My Projects</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container reveal">
+            <div class="about-content">
+                <h2>Digital Craftsmanship</h2>
+                <p>
+                    A detail-oriented Data Science student with a unique background in Digital Craftsmanship. Inspired by a family legacy of carpentry and tailoring, I approach software and web development with the same focus on precision, structure, and quality. Currently building a strong foundation in Python, MySQL, and Web Technologies, aiming to create data-driven web applications that are as functional as they are aesthetic.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills">
+        <div class="container reveal">
+            <h2 style="text-align: center; margin-bottom: 50px; font-size: 2.5rem;">Technical Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-item"><i class="fas fa-code fa-2x"></i><br>C Language</div>
+                <div class="skill-item"><i class="fab fa-java fa-2x"></i><br>Java</div>
+                <div class="skill-item"><i class="fab fa-python fa-2x"></i><br>Python</div>
+                <div class="skill-item"><i class="fab fa-html5 fa-2x"></i><br>HTML5</div>
+                <div class="skill-item"><i class="fab fa-css3-alt fa-2x"></i><br>CSS3</div>
+                <div class="skill-item"><i class="fab fa-js fa-2x"></i><br>JavaScript</div>
+                <div class="skill-item"><i class="fas fa-database fa-2x"></i><br>SQL</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects">
+        <div class="container reveal">
+            <h2 style="text-align: center; margin-bottom: 60px; font-size: 2.5rem;">Featured Projects</h2>
+            <div class="project-grid">
+                
+                <!-- Project 1: Chatbox -->
+                <div class="card js-tilt">
+                    <div class="card-content">
+                        <h3>Chatbox App</h3>
+                        <div class="card-details">
+                            <i class="far fa-clock"></i> 1 Month &nbsp;|&nbsp; <i class="fab fa-apple"></i> Mac OS &nbsp;|&nbsp; <i class="fas fa-user"></i> Individual
+                        </div>
+                        <p>A real-time web-based chat application built using HTML, CSS, JavaScript, and Firebase. It supports user authentication, friend requests, one-to-one messaging, and real-time online status. Users can share text messages, images, videos, and files with upload progress tracking.</p>
+                        <div class="tech-stack">
+                            <span class="tech-tag">JavaScript</span>
+                            <span class="tech-tag">Firebase</span>
+                            <span class="tech-tag">HTML/CSS</span>
+                            <span class="tech-tag">Vercel</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: Weather Service -->
+                <div class="card js-tilt">
+                    <div class="card-content">
+                        <h3>Weather Service</h3>
+                        <div class="card-details">
+                            <i class="far fa-clock"></i> 15 Days &nbsp;|&nbsp; <i class="fab fa-apple"></i> Mac OS &nbsp;|&nbsp; <i class="fas fa-user"></i> Individual
+                        </div>
+                        <p>A responsive weather detection website developed using HTML, CSS, and JavaScript. Integrated the Weatherbit API to fetch and display real-time temperature and weather conditions for any location worldwide.</p>
+                        <div class="tech-stack">
+                            <span class="tech-tag">JavaScript</span>
+                            <span class="tech-tag">Weatherbit API</span>
+                            <span class="tech-tag">Responsive Design</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container contact-box reveal">
+            <h2>Get In Touch</h2>
+            <p style="color: var(--text-muted); margin-bottom: 30px;">Open for learning opportunities, collaborations, and Data Science roles.</p>
+            
+            <div style="margin-bottom: 20px; font-size: 1.2rem;">
+                <a href="tel:+918861302835" class="contact-link">
+                    <i class="fas fa-phone-alt"></i> +91 8861302835
+                </a>
+                <br>
+                <a href="mailto:mr.varshith720b@gmail.com" class="contact-link">
+                    <i class="fas fa-envelope"></i> mr.varshith720b@gmail.com
+                </a>
+            </div>
+
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/varshith-burra-3a4161342" target="_blank" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/Varshi988" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // --- 1. Custom Cursor Logic ---
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        // --- 2. Scroll Reveal Animation ---
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const elementVisible = 150;
+
+            revealElements.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+
+        // --- 3. Typewriter Effect ---
+        const textElement = document.getElementById('typewriter');
+        const phrases = ["Data Science Student", "Web Developer", "Digital Craftsman"];
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function type() {
+            const currentPhrase = phrases[phraseIndex];
+            
+            if (isDeleting) {
+                textElement.textContent = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                textElement.textContent = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                isDeleting = true;
+                setTimeout(type, 2000); 
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                setTimeout(type, 500);
+            } else {
+                setTimeout(type, isDeleting ? 50 : 100);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', type);
+
+        // --- 4. 3D Tilt Effect for Cards ---
+        const cards = document.querySelectorAll('.js-tilt');
+
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const xRotation = -((y - rect.height / 2) / 20); 
+                const yRotation = (x - rect.width / 2) / 20; 
+                
+                card.style.transform = `perspective(1000px) rotateX(${xRotation}deg) rotateY(${yRotation}deg) scale(1.02)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale(1)`;
+            });
+        });
+
+    </script>
+</body>
+</html>
